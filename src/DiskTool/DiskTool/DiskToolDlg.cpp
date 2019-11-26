@@ -300,13 +300,14 @@ void CDiskToolDlg::OnBnClickedButton1()
 		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,  // 打开只读文件
 		"镜像文件(*.img)|*.IMG|所有文件 (*.*)|*.*||"  // 所有可以打开的文件类型
 	);
-	if (IDOK == findFileDlg.DoModal())
+	if (IDOK != findFileDlg.DoModal())
 	{
 		m_FilePath = _T("");
 	}
 	else
 	{
-		m_FilePath = findFileDlg.GetPathName();  // 取出文件路径 
+		m_FilePath = findFileDlg.GetPathName();  // 取出文件路径
+		GetDlgItem(IDC_STATIC1)->SetWindowText(m_FilePath);
 	}
 }
 
@@ -822,6 +823,7 @@ void CDiskToolDlg::OnBnClickedButton4()
 	}
 
 	lasti = 0ul;
+	status = STATUS_WRITING;
 	for (i = 0ul; i < numsectors && status == STATUS_WRITING; i += 1024ul)
 	{
 		sectorData = ReadSectorDataFromHandle(hFile, i, (numsectors - i >= 1024ul) ? 1024ul : (numsectors - i), sectorsize);
@@ -861,4 +863,5 @@ void CDiskToolDlg::OnBnClickedButton4()
 	hRawDisk = INVALID_HANDLE_VALUE;
 	hFile = INVALID_HANDLE_VALUE;
 	hVolume = INVALID_HANDLE_VALUE;
+	MessageBox(_T("Success"), _T("Write"), MB_OK);
 }
